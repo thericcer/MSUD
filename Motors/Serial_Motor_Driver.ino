@@ -23,8 +23,9 @@
 #define STEER 'S'
 #define FORWARD 'F'
 #define SENSOR 'Z'
+#define STATUS 'C'
 
-char MotorString[5];
+unsigned char inPacket[5];
 
 /* Define a Status Byte, This will be sent as a response to recieving a 5 byte command packet
  * 
@@ -35,10 +36,16 @@ char MotorString[5];
  * B1 - Command Received, Values changed
  * More to come
  */
-char StatusByte = 0;
-char LoopCount = 0;
+unsigned char StatusByte = 0;
+unsigned char LoopCount = 0;
 
 int SensorArray[4] = {0};
+
+unsigned char SteerArray[4] = {0};
+unsigned char MotorArray[4] = {0};
+
+int loopTime = 0;
+int oldLoopTime = 0;
 
 Servo leftFront;
 Servo leftRear;
@@ -91,13 +98,14 @@ void setup(){
 }
 
 void loop(){
+  oldLoopTime = millis();
   newData = 0;
   //Serial.println("Hello");
-  //Loop until we get 5 bytes from the UART then read them into MotorString
+  //Loop until we get 5 bytes from the UART then read them into inPacket
   if(Serial.available() == 5){
     newData = 1;
     for(int i = 0; i < 5 ; i++){
-      MotorString[i] = Serial.read();
+      inPacket[i] = Serial.read();
     }
     StatusByte = 0x02 | StatusByte; 
     Serial.write(StatusByte);
@@ -105,13 +113,18 @@ void loop(){
   }
   if (newData){
     //Figure out what motors are called for
-    switch (MotorString[0]){
+    switch (inPacket[0]){
       
       //Drive motors called
       case DRIVE: 
       
+        MotorArray[0] = inPacket[1];
+        MotorArray[1] = inPacket[2];
+        MotorArray[2] = inPacket[3];
+        MotorArray[3] = inPacket[4];
+        
         //Set Direction, Assuming we want both front and back going the same way
-        if (MotorString[3] == FORWARD){
+        if (MotorArray[2] == FORWARD){
           digitalWrite(2, HIGH);
           digitalWrite(3, LOW);
           
@@ -122,7 +135,7 @@ void loop(){
           
         }
         
-        if (MotorString[4] == FORWARD){
+        if (MotorArray[3] == FORWARD){
           digitalWrite(4, HIGH);
           digitalWrite(5, LOW);
         }
@@ -134,40 +147,61 @@ void loop(){
         
         
         //Next set speed
-        analogWrite(6, MotorString[1]);
-        analogWrite(11, MotorString[2]);
-        //Serial.print(" Speed L: ");
-        //Serial.print(MotorString[1], DEC);
-        //Serial.print(" R: ");
-        //Serial.println(MotorString[2], DEC);
+        analogWrite(6, MotorArray[0]);
+        analogWrite(11, MotorArray[1]);
+
         break;
         
       case STEER:
       
+        SteerArray[0] = inPacket[1];
+        SteerArray[1] = inPacket[2];
+        SteerArray[2] = inPacket[3];
+        SteerArray[3] = inPacket[4];
         //Check and set servo angles
-        if(MotorString[1] <= 180){
-            leftFront.write(MotorString[1]);
+        if(SteerArray[0] <= 180){
+            leftFront.write(SteerArray[1]);
+        }
+        else{
+            StatusByte = 0x4 | StatusByte;
         }
         
-        if(MotorString[2] <= 180){
-            leftRear.write(MotorString[2]);
+        if(SteerArray[1] <= 180){
+            leftRear.write(SteerArray[2]);
+        }
+        else{
+            StatusByte = 0x4 | StatusByte;
         }
         
-        if(MotorString[3] <= 180){
-            rightFront.write(MotorString[3]);
+        if(SteerArray[2] <= 180){
+            rightFront.write(SteerArray[3]);
+        }
+        else{
+            StatusByte = 0x4 | StatusByte;
         }
         
-        if(MotorString[4] <= 180){
-            rightRear.write(MotorString[4]);
+        if(SteerArray[3] <= 180){
+            rightRear.write(SteerArray[4]);
         }
-                
+        else{
+            StatusByte = 0x4 | StatusByte;
+        }        
         break;
         
         
       case SENSOR:
-        Serial.write(SensorArray[MotorString[1]] & 0xFF);
-        Serial.write((SensorArray[MotorString[1]] >> 8) & 0xFF);
+        Serial.write(SensorArray[inPacket[1]] & 0xFF);
+        Serial.write((SensorArray[inPacket[1]] >> 8) & 0xFF);
         break;
+      
+      case STATUS:
+        Serial.write(MotorArray, 4);
+        Serial.write(SteerArray, 4);
+        Serial.write(loopTime & 0xFF);
+        Serial.write((loopTime >> 8) & 0xFF);
+        
+        break;
+  
         
       default:
         break;
@@ -188,12 +222,12 @@ void loop(){
     delayMicroseconds(5);
     digitalWrite(12, LOW);
     pinMode(12, INPUT);    
-    SensorArray[1] = (pulseIn(12, HIGH)/29)/2;
+    SensorArray[1] = (pulseIn(12, HIGH));
     
     //Serial.println(SensorArray[1], DEC);
     LoopCount = 0;
   }
-  
+  loopTime = millis() - oldLoopTime;  
   LoopCount++;
 }
   
