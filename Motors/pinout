@@ -1,0 +1,10 @@
+EN H1 Speed L:	6
+EN H2 Speed R:	11
+A H1		2
+B H1		3
+A H2		4
+B H2		5
+Servo LF	7
+Servo LR	8
+Servo RF	9
+Servo RL	10		

@@ -1,0 +1,14 @@
+1	2	3	4	5	Desc
+--------------------------------------------
+D	Spd	Spd	DirL	DirR	Control the drive motors speed and direction
+Control	0-255	0-255	F,R	F,R
+-------------------------------------
+
+S	Ang1	Ang2	Ang3	Ang4	Control angle of each individual steering servo
+Control	0-180	0-180	0-180	0-180	
+-------------------------------------
+
+Z	Sensor	DC	DC	DC	Request for sensor value
+Control	0-255	X	X	X
+-------------------------------------
+
