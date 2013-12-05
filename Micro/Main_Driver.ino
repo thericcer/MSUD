@@ -213,8 +213,12 @@ void loop(){
   if(LoopCount == 1){
     SensorArray[0] = analogRead(0);
   }
+  
   if(LoopCount == 2){
-    //SensorArray[1] = 15;
+      SensorArray[2] = analogRead(1);
+  }
+  
+  if(LoopCount == 3){
     pinMode(12, OUTPUT);
     digitalWrite(12, LOW);
     delayMicroseconds(2);
@@ -222,11 +226,11 @@ void loop(){
     delayMicroseconds(5);
     digitalWrite(12, LOW);
     pinMode(12, INPUT);    
-    SensorArray[1] = (pulseIn(12, HIGH));
+    SensorArray[1] = (pulseIn(12, HIGH, 10000));
     
-    //Serial.println(SensorArray[1], DEC);
     LoopCount = 0;
   }
+  
   loopTime = millis() - oldLoopTime;  
   LoopCount++;
 }
