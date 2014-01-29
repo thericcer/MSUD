@@ -3,11 +3,12 @@ import time
 from commclass import Controller
 
 #Control Variables
-serialPort = "/dev/ttyACM1"
+serialPort = "/dev/ttyACM0"
 mode = "Drive"
 direction = ['F', 'F']
 motor = 'B'
 steer = [90,90, 90, 90]
+steerTrim = [0, 0, 0, 0]
 linked = 0
 speed = [0, 0]
 angle = 0
@@ -58,10 +59,10 @@ try:
 
     statusscr.addstr(1, 1, "Mode: " + mode)
     statusscr.addstr(2, 1, "Steering Not Linked")
-#    if controller.connected:
-#        statusscr.addstr(3, 1, "Microcontroller connected on: " + serialPort)
-#    else:
-#        statusscr.addstr(3, 1, "Microcontroller failed to connect on: " + serialPort + "!")
+    if controller.connected:
+        statusscr.addstr(3, 1, "Microcontroller connected on: " + serialPort)
+    else:
+        statusscr.addstr(3, 1, "Microcontroller failed to connect on: " + serialPort + "!")
     statusscr.addstr(4, 1, "Current Status Byte: " + str(controller.statusByte))
 
     statusscr.refresh()
@@ -110,10 +111,10 @@ try:
             curses.flash()
             speed[0] = 0
             speed[1] = 0
-            steer[0] = 90
-            steer[1] = 90
-            steer[2] = 90
-            steer[3] = 90
+            steer[0] = 90 + steerTrim[0]
+            steer[1] = 90 + steerTrim[1]
+            steer[2] = 90 + steerTrim[2]
+            steer[3] = 90 + steerTrim[3]
             angle = 0
             readSensors = 0
 
@@ -129,8 +130,8 @@ try:
                 steer[3] -= 5
             else:
                 steer[0] -= 5
-                steer[1] -= 5
-                steer[2] += 5
+                steer[1] += 5
+                steer[2] -= 5
                 steer[3] += 5
         elif char == curses.KEY_RIGHT:
             angle += 5
@@ -141,8 +142,8 @@ try:
                 steer[3] += 5
             else:
                 steer[0] += 5
-                steer[1] += 5
-                steer[2] -= 5
+                steer[1] -= 5
+                steer[2] += 5
                 steer[3] -= 5
 
         #Change Motor Direction
