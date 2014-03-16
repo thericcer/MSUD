@@ -2,6 +2,7 @@ import curses
 import time
 from commclass import Controller
 
+
 #Control Variables
 serialPort = "/dev/ttyACM0"
 mode = "Drive"
@@ -129,8 +130,8 @@ try:
                 steer[2] -= 5
                 steer[3] -= 5
             else:
-                steer[0] -= 5
-                steer[1] += 5
+                steer[0] += 5
+                steer[1] -= 5
                 steer[2] -= 5
                 steer[3] += 5
         elif char == curses.KEY_RIGHT:
@@ -141,8 +142,8 @@ try:
                 steer[2] += 5
                 steer[3] += 5
             else:
-                steer[0] += 5
-                steer[1] -= 5
+                steer[0] -= 5
+                steer[1] += 5
                 steer[2] += 5
                 steer[3] -= 5
 
