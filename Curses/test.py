@@ -184,8 +184,8 @@ try:
             else:
                 steer[0] += 5
                 steer[1] -= 5
-                steer[2] -= 5
-                steer[3] += 5
+                steer[2] += 5
+                steer[3] -= 5
         elif char == curses.KEY_RIGHT:
             angle += 5
             if linked:
@@ -196,8 +196,8 @@ try:
             else:
                 steer[0] -= 5
                 steer[1] += 5
-                steer[2] += 5
-                steer[3] -= 5
+                steer[2] -= 5
+                steer[3] += 5
 
         elif char==81:
             lifter='U'
