@@ -16,6 +16,10 @@ angle = 0
 readSensors = 0
 sensors = [0, 0, 0, 0]
 controller = Controller(serialPort, 9600, 1)
+pusher='S'
+lifter='S'
+cameraBoomL=130
+cameraBoomU=130
 
 try:
 
@@ -32,14 +36,19 @@ try:
     steerscr = curses.newwin(10, 20, 1, 20)
     sensorscr = curses.newwin(10, 20, 1, 40)
     statusscr = curses.newwin(6, 60, 11, 0)
+    mechscr=curses.newwin(6,60,17,0)
+    legendscr=curses.newwin(30,50,1,61)
     speedscr.keypad(1)
     steerscr.keypad(1)
     statusscr.keypad(1)
     sensorscr.keypad(1)
+    mechscr.keypad(1)
     speedscr.box()
     steerscr.box()
     statusscr.box()
     sensorscr.box()
+    mechscr.box()
+    legendscr.box()
 
     speedscr.addstr(1, 1, "Speed R: " + str(speed[0]))
     speedscr.addstr(2, 1, "Speed L: " + str(speed[1]))
@@ -66,10 +75,50 @@ try:
         statusscr.addstr(3, 1, "Microcontroller failed to connect on: " + serialPort + "!")
     statusscr.addstr(4, 1, "Current Status Byte: " + str(controller.statusByte))
 
+    mechscr.addstr(1,1,"Pusher: "+ pusher)
+    mechscr.addstr(2,1,"Lifter: "+ lifter)
+    mechscr.addstr(3,1,"Camera Boom Lower: "+str(cameraBoomL))
+    mechscr.addstr(4,1,"Camera Boom Upper: "+str(cameraBoomU))
+
+
+    legendscr.addstr(1,1,"----DRIVE MODE----")
+    legendscr.addstr(2,1,"Enable Drive Mode = D")
+    legendscr.addstr(3,1,"Drive Right Motors = R")
+    legendscr.addstr(4,1,"Drive Left  Motors = L")
+    legendscr.addstr(5,1,"Drive Both Motors = B")
+    legendscr.addstr(6,1,"----------------------")
+   
+    legendscr.addstr(7,1,"----STEERING MODE----")
+    legendscr.addstr(8,1,"Enable Steer Mode = S")
+    legendscr.addstr(9,1,"Links Steering = L")
+    legendscr.addstr(10,1,"----------------------")
+
+    legendscr.addstr(11,1,"----PERIPHERAL MODE----")
+    legendscr.addstr(12,1,"Enable Peripheral Mode = P")
+    legendscr.addstr(13,1,"Platform Up = Q")
+    legendscr.addstr(14,1,"Platform Stop = A")
+    legendscr.addstr(15,1,"Platform Down = Z")
+    legendscr.addstr(16,1,"Pusher Forward = E")
+    legendscr.addstr(17,1,"Pusher Stop = D")
+    legendscr.addstr(18,1,"Push Reverse = C")
+    legendscr.addstr(19,1,"----------------------")
+
+    legendscr.addstr(20,1,"----ALL MODES----")
+    legendscr.addstr(21,1,"Speed Up = Up Arrow")
+    legendscr.addstr(22,1,"Speed Up = Down Arrow")
+    legendscr.addstr(23,1,"Decrease Angle = Left Arrow")
+    legendscr.addstr(24,1,"Increase Angle = Right Arrow")
+    
+    legendscr.addstr(25,1,"Kills Everything and resets to home = X")
+    legendscr.addstr(26,1,"Turns On The Sensors (SLOW) = Z")
+    legendscr.addstr(27,1,"----------------------")
+
     statusscr.refresh()
     speedscr.refresh()
     steerscr.refresh()
     sensorscr.refresh()
+    mechscr.refresh()
+    legendscr.refresh()
 
     #Main Loop
     while True:
