@@ -20,13 +20,14 @@ pusher='S'
 lifter='S'
 cameraBoomL=130
 cameraBoomU=130
-
+char="0"
 try:
 
 
     #Screen init stuff
     stdscr = curses.initscr()
     curses.noecho()
+    curses.curs_set(0)
     curses.cbreak()
     stdscr.keypad(1)
     stdscr.addstr("Robot Control")
@@ -95,12 +96,12 @@ try:
 
     legendscr.addstr(11,1,"----PERIPHERAL MODE----")
     legendscr.addstr(12,1,"Enable Peripheral Mode = P")
-    legendscr.addstr(13,1,"Platform Up = Q")
-    legendscr.addstr(14,1,"Platform Stop = A")
-    legendscr.addstr(15,1,"Platform Down = Z")
-    legendscr.addstr(16,1,"Pusher Forward = E")
-    legendscr.addstr(17,1,"Pusher Stop = D")
-    legendscr.addstr(18,1,"Push Reverse = C")
+    legendscr.addstr(13,1,"Platform Up = Shift-Q")
+    legendscr.addstr(14,1,"Platform Stop = Shift-A")
+    legendscr.addstr(15,1,"Platform Down = Shift-Z")
+    legendscr.addstr(16,1,"Pusher Forward = Shift-W")
+    legendscr.addstr(17,1,"Pusher Stop = Shift-S")
+    legendscr.addstr(18,1,"Pusher Reverse = Shift-X")
     legendscr.addstr(19,1,"----------------------")
 
     legendscr.addstr(20,1,"----ALL MODES----")
@@ -138,7 +139,7 @@ try:
             mode = "Drive"
         elif char == 115:
             mode = "Steer"
-        
+
         elif char == curses.KEY_UP:
             if motor == 'B':
                 speed[0] += 5
@@ -167,6 +168,8 @@ try:
             steer[3] = 90 + steerTrim[3]
             angle = 0
             readSensors = 0
+            lifter='S'
+            pusher='S'
 
         elif char == 122:
             readSensors = not readSensors
@@ -195,6 +198,19 @@ try:
                 steer[1] += 5
                 steer[2] += 5
                 steer[3] -= 5
+
+        elif char==81:
+            lifter='U'
+        elif char==65:
+            lifter='S'
+        elif char==90:
+            lifter='D'
+        elif char==87:
+            pusher='F'
+        elif char==83:
+            pusher='S'
+        elif char==88:
+            pusher='R'
 
         #Change Motor Direction
         if speed[0] >= 0:
@@ -242,6 +258,8 @@ try:
         if controller.connected:
             controller.writeDrivePacket('D', abs(speed[0]), abs(speed[1]), direction[0], direction[1])
             controller.writeSteerPacket('S', abs(steer[0]), abs(steer[1]), abs(steer[2]), abs(steer[3]))
+            controller.pusher(pusher)
+            controller.lifter(lifter)
 #        if controller.statusByte[0] == 3:
 #            speed[0] = 0
 #            speed[1] = 0
@@ -304,6 +322,14 @@ try:
         sensorscr.addstr(4, 1, "Sensor 4: " + str(sensors[3]))
         sensorscr.refresh()
 
+        mechscr.erase()
+        mechscr.box()
+        mechscr.addstr(1,1,"Pusher: "+ pusher)
+        mechscr.addstr(2,1,"Lifter: "+ lifter)
+        mechscr.addstr(3,1,"Camera Boom Lower: "+str(cameraBoomL))
+        mechscr.addstr(4,1,"Camera Boom Upper: "+str(cameraBoomU))
+        mechscr.refresh()
+        
 except KeyboardInterrupt:
     stdscr.erase()
     stdscr.addstr(0, 0, "Resetting All Values to 0: ")
@@ -330,4 +356,5 @@ except KeyboardInterrupt:
     curses.nocbreak()
     curses.echo()
     stdscr.keypad(0)
+    curses.curs_set(1)
     curses.endwin()

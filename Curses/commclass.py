@@ -45,6 +45,23 @@ class Controller:
                 Command = struct.unpack("<BH", sensorData)
                 self.currentSensor = Command[1]
 
+    def pusher(self, direction):
+        if self.connected:
+            self.port.write(struct.pack("<ccBBB",'K',direction,0,0,0))
+            data=self.port.read()
+            if len(data) !=1:
+                self.statusByte=-1
+            else:
+                self.statusByte=struct.unpack("<B",data)
+
+    def lifter(self, direction):
+        if self.connected:
+            self.port.write(struct.pack("<ccBBB",'P',direction,0,0,0))
+            data=self.port.read()
+            if len(data) !=1:
+                self.statusByte=-1
+            else:
+                self.statusByte=struct.unpack("<B",data)
 
     def close(self):
         if self.connected:
