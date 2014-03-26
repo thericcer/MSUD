@@ -63,6 +63,24 @@ class Controller:
             else:
                 self.statusByte=struct.unpack("<B",data)
 
+    def hook(self, position):
+        if self.connected:
+            self.port.write(struct.pack("<cBBBB", 'H', position, 0, 0, 0))
+            data = self.port.read()
+            if len(data) != 1:
+                self.statusByte=-1
+            else:
+                self.statusByte=struct.unpack("<B", data)
+
+    def breakout(self):
+        if self.connected:
+            self.port.write(struct.pack("<cBBBB", 'B', 0, 0, 0, 0))
+            data=self.port.read()
+            if len(data) != 1:
+                self.statusByte=-1
+            else:
+                self.statusByte=struct.unpack("<B", data)
+
     def close(self):
         if self.connected:
             self.port.close()

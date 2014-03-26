@@ -212,6 +212,14 @@ try:
         elif char==88:
             pusher='R'
 
+        elif char == 101:
+            controller.hook(0)
+        elif char == 99:
+            controller.hook(170)
+
+        elif char==66:
+            controller.breakout()
+
         #Change Motor Direction
         if speed[0] >= 0:
             direction[0] = 'F'
@@ -311,7 +319,11 @@ try:
             statusscr.addstr(3, 1, "Microcontroller Connected on: " + serialPort)
         else:
             statusscr.addstr(3, 1, "Microcontroller failed to connect on: " + serialPort + "!")
-        statusscr.addstr(4, 1, "Current Status Byte: " + str(controller.statusByte))
+        statusscr.addstr(4, 1, "Current Status Byte: " + str(controller.statusByte[0]))
+        if controller.statusByte[0] == 2:
+            statusscr.addstr(2, 45, "OK")
+        elif controller.statusByte[0] == 1:
+            statusscr.addstr(2, 45, "ERROR")
         statusscr.refresh()
 
         sensorscr.erase()
