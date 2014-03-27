@@ -21,6 +21,7 @@ lifter='S'
 cameraBoomL=130
 cameraBoomU=130
 char="0"
+
 try:
 
 
@@ -81,7 +82,6 @@ try:
     mechscr.addstr(3,1,"Camera Boom Lower: "+str(cameraBoomL))
     mechscr.addstr(4,1,"Camera Boom Upper: "+str(cameraBoomU))
 
-
     legendscr.addstr(1,1,"----DRIVE MODE----")
     legendscr.addstr(2,1,"Enable Drive Mode = D")
     legendscr.addstr(3,1,"Drive Right Motors = R")
@@ -95,7 +95,6 @@ try:
     legendscr.addstr(10,1,"----------------------")
 
     legendscr.addstr(11,1,"----PERIPHERAL MODE----")
-    legendscr.addstr(12,1,"Enable Peripheral Mode = P")
     legendscr.addstr(13,1,"Platform Up = Shift-Q")
     legendscr.addstr(14,1,"Platform Stop = Shift-A")
     legendscr.addstr(15,1,"Platform Down = Shift-Z")
