@@ -319,11 +319,12 @@ try:
             statusscr.addstr(3, 1, "Microcontroller Connected on: " + serialPort)
         else:
             statusscr.addstr(3, 1, "Microcontroller failed to connect on: " + serialPort + "!")
-        statusscr.addstr(4, 1, "Current Status Byte: " + str(controller.statusByte[0]))
-        if controller.statusByte[0] == 2:
-            statusscr.addstr(2, 45, "OK")
-        elif controller.statusByte[0] == 1:
-            statusscr.addstr(2, 45, "ERROR")
+        if controller.connected:
+            statusscr.addstr(4, 1, "Current Status Byte: " + str(controller.statusByte[0]))
+            if controller.statusByte[0] == 2:
+                statusscr.addstr(2, 45, "OK")
+            elif controller.statusByte[0] == 1:
+                statusscr.addstr(2, 45, "ERROR")
         statusscr.refresh()
 
         sensorscr.erase()
