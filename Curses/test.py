@@ -21,6 +21,7 @@ lifter='S'
 cameraBoomL=130
 cameraBoomU=130
 char="0"
+
 try:
 
 
@@ -81,7 +82,6 @@ try:
     mechscr.addstr(3,1,"Camera Boom Lower: "+str(cameraBoomL))
     mechscr.addstr(4,1,"Camera Boom Upper: "+str(cameraBoomU))
 
-
     legendscr.addstr(1,1,"----DRIVE MODE----")
     legendscr.addstr(2,1,"Enable Drive Mode = D")
     legendscr.addstr(3,1,"Drive Right Motors = R")
@@ -95,7 +95,6 @@ try:
     legendscr.addstr(10,1,"----------------------")
 
     legendscr.addstr(11,1,"----PERIPHERAL MODE----")
-    legendscr.addstr(12,1,"Enable Peripheral Mode = P")
     legendscr.addstr(13,1,"Platform Up = Shift-Q")
     legendscr.addstr(14,1,"Platform Stop = Shift-A")
     legendscr.addstr(15,1,"Platform Down = Shift-Z")
@@ -319,11 +318,12 @@ try:
             statusscr.addstr(3, 1, "Microcontroller Connected on: " + serialPort)
         else:
             statusscr.addstr(3, 1, "Microcontroller failed to connect on: " + serialPort + "!")
-        statusscr.addstr(4, 1, "Current Status Byte: " + str(controller.statusByte[0]))
-        if controller.statusByte[0] == 2:
-            statusscr.addstr(2, 45, "OK")
-        elif controller.statusByte[0] == 1:
-            statusscr.addstr(2, 45, "ERROR")
+        if controller.connected:
+            statusscr.addstr(4, 1, "Current Status Byte: " + str(controller.statusByte[0]))
+            if controller.statusByte[0] == 2:
+                statusscr.addstr(2, 45, "OK")
+            elif controller.statusByte[0] == 1:
+                statusscr.addstr(2, 45, "ERROR")
         statusscr.refresh()
 
         sensorscr.erase()
