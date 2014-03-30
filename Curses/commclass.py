@@ -49,6 +49,7 @@ class Controller:
         if self.connected:
             self.port.write(struct.pack("<ccBBB",'K',direction,0,0,0))
             data=self.port.read()
+            ignore=self.port.read()
             if len(data) !=1:
                 self.statusByte=-1
             else:

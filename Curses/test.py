@@ -119,7 +119,6 @@ try:
     sensorscr.refresh()
     mechscr.refresh()
     legendscr.refresh()
-
     #Main Loop
     while True:
         #Catch key input
