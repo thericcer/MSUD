@@ -39,7 +39,7 @@ try:
     steerscr = curses.newwin(10, 20, 1, 20)
     sensorscr = curses.newwin(10, 20, 1, 40)
     statusscr = curses.newwin(6, 60, 11, 0)
-    mechscr=curses.newwin(6,60,17,0)
+    mechscr=curses.newwin(7,60,17,0)
     legendscr=curses.newwin(35,50,1,61)
     speedscr.keypad(1)
     steerscr.keypad(1)
