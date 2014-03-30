@@ -18,6 +18,7 @@ sensors = [0, 0, 0, 0]
 controller = Controller(serialPort, 9600, 1)
 pusher='S'
 lifter='S'
+hook='D'
 cameraBoomL=130
 cameraBoomU=130
 char="0"
@@ -39,7 +40,7 @@ try:
     sensorscr = curses.newwin(10, 20, 1, 40)
     statusscr = curses.newwin(6, 60, 11, 0)
     mechscr=curses.newwin(6,60,17,0)
-    legendscr=curses.newwin(30,50,1,61)
+    legendscr=curses.newwin(35,50,1,61)
     speedscr.keypad(1)
     steerscr.keypad(1)
     statusscr.keypad(1)
@@ -79,8 +80,9 @@ try:
 
     mechscr.addstr(1,1,"Pusher: "+ pusher)
     mechscr.addstr(2,1,"Lifter: "+ lifter)
-    mechscr.addstr(3,1,"Camera Boom Lower: "+str(cameraBoomL))
-    mechscr.addstr(4,1,"Camera Boom Upper: "+str(cameraBoomU))
+    mechscr.addstr(3,1,"Hook: " + hook)
+    mechscr.addstr(4,1,"Camera Boom Lower: "+str(cameraBoomL))
+    mechscr.addstr(5,1,"Camera Boom Upper: "+str(cameraBoomU))
 
     legendscr.addstr(1,1,"----DRIVE MODE----")
     legendscr.addstr(2,1,"Enable Drive Mode = D")
@@ -95,23 +97,26 @@ try:
     legendscr.addstr(10,1,"----------------------")
 
     legendscr.addstr(11,1,"----PERIPHERAL MODE----")
-    legendscr.addstr(13,1,"Platform Up = Shift-Q")
-    legendscr.addstr(14,1,"Platform Stop = Shift-A")
-    legendscr.addstr(15,1,"Platform Down = Shift-Z")
-    legendscr.addstr(16,1,"Pusher Forward = Shift-W")
-    legendscr.addstr(17,1,"Pusher Stop = Shift-S")
-    legendscr.addstr(18,1,"Pusher Reverse = Shift-X")
-    legendscr.addstr(19,1,"----------------------")
+    legendscr.addstr(12,1,"Platform Up = Shift-Q")
+    legendscr.addstr(13,1,"Platform Stop = Shift-A")
+    legendscr.addstr(14,1,"Platform Down = Shift-Z")
+    legendscr.addstr(15,1,"Pusher Forward = Shift-W")
+    legendscr.addstr(16,1,"Pusher Stop = Shift-S")
+    legendscr.addstr(17,1,"Pusher Reverse = Shift-X")
+    legendscr.addstr(18,1,"Hook Up = Shift-E")
+    legendscr.addstr(19,1,"Hook Middle = Shift-D")
+    legendscr.addstr(20,1,"Hook Down = Shift-C")
+    legendscr.addstr(21,1,"----------------------")
 
-    legendscr.addstr(20,1,"----ALL MODES----")
-    legendscr.addstr(21,1,"Speed Up = Up Arrow")
-    legendscr.addstr(22,1,"Speed Up = Down Arrow")
-    legendscr.addstr(23,1,"Decrease Angle = Left Arrow")
-    legendscr.addstr(24,1,"Increase Angle = Right Arrow")
+    legendscr.addstr(22,1,"----ALL MODES----")
+    legendscr.addstr(23,1,"Speed Up = Up Arrow")
+    legendscr.addstr(24,1,"Speed Up = Down Arrow")
+    legendscr.addstr(25,1,"Decrease Angle = Left Arrow")
+    legendscr.addstr(26,1,"Increase Angle = Right Arrow")
     
-    legendscr.addstr(25,1,"Kills Everything and resets to home = X")
-    legendscr.addstr(26,1,"Turns On The Sensors (SLOW) = Z")
-    legendscr.addstr(27,1,"----------------------")
+    legendscr.addstr(27,1,"Kills Everything and resets to home = X")
+    legendscr.addstr(28,1,"Turns On The Sensors (SLOW) = Z")
+    legendscr.addstr(29,1,"----------------------")
 
     statusscr.refresh()
     speedscr.refresh()
@@ -209,11 +214,15 @@ try:
             pusher='S'
         elif char==88:
             pusher='R'
-
-        elif char == 101:
-            controller.hook(0)
-        elif char == 99:
-            controller.hook(170)
+	elif char==69:
+	    controller.hook(0)
+	    hook='U'
+	elif char==68:
+	    controller.hook(90)
+	    hook='M'
+	elif char==67:
+	    controller.hook(170)
+	    hook='D'
 
         elif char==66:
             controller.breakout()
@@ -337,8 +346,9 @@ try:
         mechscr.box()
         mechscr.addstr(1,1,"Pusher: "+ pusher)
         mechscr.addstr(2,1,"Lifter: "+ lifter)
-        mechscr.addstr(3,1,"Camera Boom Lower: "+str(cameraBoomL))
-        mechscr.addstr(4,1,"Camera Boom Upper: "+str(cameraBoomU))
+	mechscr.addstr(3,1,"Hook: "+ hook)
+        mechscr.addstr(4,1,"Camera Boom Lower: "+str(cameraBoomL))
+        mechscr.addstr(5,1,"Camera Boom Upper: "+str(cameraBoomU))
         mechscr.refresh()
         
 except KeyboardInterrupt:
